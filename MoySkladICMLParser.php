@@ -384,6 +384,14 @@ class MoySkladICMLParser
                         $products[$assortiment['id']]['effectiveVat'] = 'none';
                     }
 
+                    if (isset($assortiment['quantity'])) {
+                        $products[$assortiment['id']]['quantity'] = $assortiment['quantity'];
+                    } elseif (isset($assortiment['product']['quantity'])) {
+                        $products[$assortiment['id']]['quantity'] = $assortiment['product']['quantity'];
+                    } else {
+                        $products[$assortiment['id']]['quantity'] = 'none';
+                    }
+
                     if (isset($assortiment['productFolder']['externalCode'])) {
                         $products[$assortiment['id']]['categoryId'] = $assortiment['productFolder']['externalCode'];
                     } elseif (isset($assortiment['product']['productFolder']['externalCode'])) {
@@ -470,6 +478,7 @@ class MoySkladICMLParser
                 $offerXml = $offersXml->addChild('offer');
                 $offerXml->addAttribute('id', $product['id']);
                 $offerXml->addAttribute('productId', $product['productId']);
+                $offerXml->addAttribute('quantity', $product['quantity']);
 
                 $this->icmlAdd($offerXml, 'xmlId', $product['xmlId']);
                 $this->icmlAdd($offerXml, 'price', number_format($product['price'], 2, '.', ''));
